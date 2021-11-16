@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ipcRenderer } from "electron";
 import { configureScope, captureMessage } from "@sentry/browser";
 import styles from "./styles.module.scss";
 import StreamonLogo from "../../images/streamon-logo.svg";
@@ -43,6 +44,8 @@ function Login({ dispatch }) {
   };
   const [currentForm, setCurrentForm] = useState(forms.login);
   const history = useHistory();
+
+  window.ipcRenderer = ipcRenderer;
 
   const completeSignIn = async () => {
     saveSession();

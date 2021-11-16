@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { Switch, Route, HashRouter as Router } from "react-router-dom";
 import Login from "../Pages/Login";
 import Home from "../Pages/Home";
+import Presenter from "../Pages/Presenter";
 import Portal from "../Portal";
 import { useUpdate } from "../lib/appStatusHook";
 import UpdateModal from "../components/UpdateModal";
@@ -16,7 +17,7 @@ export default function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   useEffect(() => {
-    checkForUpdates();
+    // checkForUpdates();
   }, []);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function App() {
         <Switch>
           <Route exact path="/" component={Login} />
           <Route path="/home" component={Home} />
+          <Route path="/presenter" component={Presenter} />
         </Switch>
         {showUpdateModal ? (
           <Portal>

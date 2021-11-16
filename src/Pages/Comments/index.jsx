@@ -87,6 +87,11 @@ function Comments({
     }
   };
 
+  const highlightComment = async (comment) => {
+
+
+  }
+
   const addComment = async () => {
     const comment = userComment;
     // do not comment, if there is no comment text available
