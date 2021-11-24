@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { configureScope, captureMessage } from "@sentry/browser";
+import { ipcRenderer } from "electron";
 import styles from "./styles.module.scss";
-import StreamonLogo from "../../images/streamon-logo.svg";
+import VrtLogo from "../../images/vrt-logo.svg";
 import LoadingBar from "../../components/LoadingBar";
-import axios from "axios";
 
 import {
   IgLoginInvalidUserError,
@@ -44,25 +43,15 @@ function Login({ dispatch }) {
   const [currentForm, setCurrentForm] = useState(forms.login);
   const history = useHistory();
 
+  window.ipcRenderer = ipcRenderer;
+
   const completeSignIn = async () => {
     saveSession();
     try {
       const profile = await client.account.currentUser();
-      const accountDetails = await client.user.info(profile.pk);
 
-      console.log({ profile, accountDetails })
-      // save user info in the server
-      axios
-        .post(
-          `${process.env.REACT_APP_API_SERVICE_URL}/api/user`,
-          accountDetails
-        )
-        .catch((error) => {
-          console.log(error);
-        });
-      configureScope((scope) => {
-        scope.setUser({ id: profile.username });
-      });
+    
+
       dispatch(setUserProfile(profile));
       dispatch(setSignedIn(true));
       setLoading(false);
@@ -79,6 +68,7 @@ function Login({ dispatch }) {
       setLoading(true);
       try {
         await loadSession();
+        console.log('load session');
         completeSignIn();
       } catch (error) {
         removeSession();
@@ -189,7 +179,7 @@ function Login({ dispatch }) {
 
   return (
     <div className={styles.loginPage}>
-      <img className={styles.instaLogo} src={StreamonLogo} alt="ig_logo" />
+      <img className={styles.instaLogo} src={VrtLogo} alt="ig_logo" />
       {isLoading ? (
         <div className={styles.loaderArea}>
           <LoadingBar />

@@ -10,7 +10,10 @@ function instagram(state = { client: null, comments: [] }, action) {
       return {
         ...state,
         comments: state.comments
-          ? [...action.comments, ...state.comments].slice(0, config.MAX_COMMENTS)
+          ? [...action.comments, ...state.comments].slice(
+              0,
+              config.MAX_COMMENTS
+            )
           : action.comments,
       };
     case types.CLEAR_COMMENTS:
@@ -38,10 +41,22 @@ function auth(state = { isLoggedIn: false }, action) {
   }
 }
 
+function feeds(state = [], action) {
+  switch (action.type) {
+    case types.ADD_FEED:
+      return [...state, action.feed];
+    case types.REMOVE_FEED:
+      return state.filter((feed) => feed !== action.feed);
+    default:
+      return state;
+  }
+}
+
 const InstagramUser = combineReducers({
   instagram,
   user,
   auth,
+  feeds,
 });
 
 export default InstagramUser;
