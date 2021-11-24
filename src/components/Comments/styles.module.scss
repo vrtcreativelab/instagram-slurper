@@ -9,13 +9,12 @@
   width: 100%;
   max-width: 600px;
   height: 100%;
+  min-height: 400px;
   margin: 0 auto;
-  background-color: var(--color-secondary);
+  background-color: var(--color-secondary-light);
   transition: 0.2s all ease-in-out;
 
-  @include respond-below(md) {
-    position: absolute;
-  }
+
 
   &.close {
     @include respond-below(md) {
@@ -42,6 +41,30 @@
     .title {
       font-size: 1em;
       flex: 1;
+    }
+
+    .presentIcon {
+      width: 15px;
+      height: 15px;
+      padding: 7px;
+      border-radius: 50%;
+      background-color: var(--color-secondary-light);
+      transition: 0.2s all ease-in-out;
+      margin-left: 15px;
+      display: none;
+
+      @include respond-below(md) {
+        display: inline;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+      }
+
+      &:active {
+        transform: scale(0.9);
+      }    
     }
 
     .closeIcon {
@@ -81,6 +104,16 @@
       align-items: flex-start;
       padding: 10px 15px;
 
+      &.active {
+        .textContainer {
+        background-color: var(--color-primary);
+          &:before {
+            border-right: 10px solid var(--color-primary);
+            border-top: 10px solid var(--color-primary  );
+          }
+        }
+      }
+
       .profilePic {
         width: 30px;
         height: 30px;
@@ -92,7 +125,7 @@
         display: flex;
         flex-direction: column;
         padding: 10px 15px;
-        background-color: var(--color-secondary-light);
+        background-color: var(--color-secondary);
         border-radius: 5px;
         flex-basis: 1;
         flex-grow: 0;

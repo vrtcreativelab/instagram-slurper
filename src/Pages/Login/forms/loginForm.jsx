@@ -47,35 +47,7 @@ export default function LoginForm({ handleLogin, credError }) {
       >
         Login
       </Button>
-      <div className={styles.statusTexts}>
-        <p className={styles.status}>Streamon {appVersion}</p>
-        <p className={styles.author}>
-          ⚠️ Please read our&nbsp;
-          <span
-            className={styles.link}
-            onClick={() => openLinkInBrowser("https://getstreamon.com/terms")}
-          >
-            ToS and Privacy Policy
-          </span>
-        </p>
-        <p className={styles.links}>
-          <span
-            className={styles.link}
-            onClick={() =>
-              openLinkInBrowser("https://getstreamon.com/downloads")
-            }
-          >
-           🌀 Updates
-          </span>{" "}
-          •&nbsp;
-          <span
-            className={styles.link}
-            onClick={() => openLinkInBrowser("https://ko-fi.com/haxzie")}
-          >
-            💸 Donate
-          </span>
-        </p>
-      </div>
+     
     </form>
   );
 }

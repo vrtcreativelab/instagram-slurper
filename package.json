@@ -1,17 +1,18 @@
 {
-  "name": "instagram-live-streamer",
-  "description": "Create streaming links to instagram live",
-  "version": "0.2.1",
+  "name": "instagram-slurper",
+  "description": "Fetch instagram live comments - based on instagram-live-streamer",
+  "version": "0.1.0",
   "private": true,
-  "copyright": "Copyright © 2020 Musthaq Ahamad",
+  "copyright": "Copyright © 2021 Tim Broddin",
   "licence": "MIT",
   "author": {
-    "name": "Musthaq Ahamad",
-    "email": "musthu.gm@gmail.com",
-    "url": "https://haxzie.com"
+    "name": "Tim Broddin",
+    "email": "tim.broddin@vrt.be",
+    "url": "https://broddin.be"
   },
   "build": {
-    "appId": "com.haxzie.instagram.live",
+    "appId": "be.broddin.instagram.comments",
+    "productName": "Instagram Slurper",
     "extends": null,
     "icon": "./build/icon.png",
     "dmg": {
@@ -60,25 +61,25 @@
       "public/electron.js",
       "build/**/*",
       "build/icon.*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "presenter/index.html"
     ],
     "directories": {
       "buildResources": "assets"
     }
   },
   "dependencies": {
-    "@sentry/browser": "^5.15.5",
     "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^10.0.4",
     "@testing-library/user-event": "^10.4.0",
-    "axios": "^0.20.0",
     "copy-to-clipboard": "^3.3.1",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "electron-google-analytics": "^1.0.2",
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^5.1.1",
     "express": "^4.17.1",
+    "find-free-port": "^2.0.0",
     "instagram-private-api": "^1.40.1",
     "node-sass": "^4.14.1",
     "open": "^7.0.4",
@@ -102,7 +103,7 @@
     "test": "rescripts test",
     "build": "rescripts build",
     "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-dev": "concurrently \"cross-env DEBUG=1 BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn build",
     "electron-pack": "build -mw",
     "pack": "electron-builder --dir",

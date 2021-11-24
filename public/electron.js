@@ -2,11 +2,11 @@ const electron = require("electron");
 const express = require("express");
 const presenter = express();
 const http = require("http");
+const freeport = require("find-free-port");
+
 const server = http.createServer(presenter);
 const { Server } = require("socket.io");
 const io = new Server(server);
-
-const port = 3001;
 
 const app = electron.app;
 const ipcMain = electron.ipcMain;
@@ -64,12 +64,23 @@ ipcMain.handle("app:get-highlight", (event) => {
   return currentHighlight;
 });
 
-presenter.use(express.static("presenter"));
+presenter.use(express.static(path.join(__dirname, "../presenter")));
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
+presenter.get("/comment", (req, res) => {
+  res.send(currentHighlight ? currentHighlight : {});
 });
 
-server.listen(port, () => {
-  console.log(`listening on *:${port}`);
-});
+freeport(3001)
+  .then(([freep]) => {
+    server.listen(freep, () => {
+      console.log(`listening on *:${freep}`);
+      require("dns").lookup(require("os").hostname(), function (err, add, fam) {
+        ipcMain.handle("app:open-presenter", (event) => {
+          require("electron").shell.openExternal(`http://${add}:${freep}`);
+        });
+      });
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });
