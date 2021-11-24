@@ -46,6 +46,10 @@ const Feed = ({ username, removeFeed }) => {
         console.log(error);
       }
     }
+
+    setTimeout(() => {
+      checkLive(targetUser);
+    }, 1000 * 30);
   };
 
   useEffect(() => {
@@ -60,7 +64,7 @@ const Feed = ({ username, removeFeed }) => {
 
   return (
     <div className={styles.feed}>
-      {profile && (
+      {profile ? (
         <>
           <div className={styles.header}>
             <img
@@ -87,6 +91,19 @@ const Feed = ({ username, removeFeed }) => {
           ) : (
             <div style={{ padding: "2rem" }}>This profile is not live.</div>
           )}
+        </>
+      ) : (
+        <>
+          <div className={styles.header}>
+            <h2 className={styles.title}>{username}</h2>
+
+            <img
+              src={CloseIcon}
+              className={styles.closeIcon}
+              onClick={() => removeFeed(username)}
+              alt="Remove feed"
+            />
+          </div>
         </>
       )}
     </div>
