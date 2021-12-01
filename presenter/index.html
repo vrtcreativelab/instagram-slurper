@@ -21,66 +21,68 @@
         box-sizing: border-box;
       }
 
-      #comment {
+      .comment {
         background-color: white;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
         padding: 1rem;
         display: flex;
         gap: 1rem;
         max-width: 90vw;
         min-width: 90vw;
+        margin-bottom: 1rem;
       }
 
-      #username {
+      .profile-pic {
+        max-width: 128px;
+        border-radius: 64px;
+      }
+
+      .username {
         max-width: 150px;
         text-align: center;
         color: #111;
       }
 
-      #comment-text {
+      .comment-text {
         font-size: 4rem;
       }
     </style>
   </head>
   <body>
-    <div id="comment">
-      <div id="user">
-        <img id="profile-pic" src="" />
-        <div id="username"></div>
-      </div>
-      <div id="comment-text"></div>
-    </div>
+    <div id="comments"></div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const presentComment = (comment) => {
-        const commentElement = document.getElementById("comment");
+      const presentHighlights = (highlights) => {
+        const commentsElement = document.getElementById("comments");
 
-        if (comment && comment.pk) {
-          console.log(comment);
-          document.getElementById("profile-pic").src =
-            "https://ig-image-proxy.haxzie.workers.dev/" +
-            comment.user?.profile_pic_url;
-          document.getElementById(
-            "username"
-          ).innerText = `@${comment.user?.username}`;
-          document.getElementById("comment-text").innerText = comment.text;
-
-          commentElement.style.display = "flex";
-        } else {
-          commentElement.style.display = "none";
-        }
+        commentsElement.innerHTML = `
+          ${highlights
+            .map(
+              (highlight) => `
+            <div class="comment"> 
+              <div>
+              <img class="profile-pic" src="${highlight.user?.profile_pic_url}" />
+              <div class="username">@${highlight.user?.username}</div>
+              </div>
+              <div class="comment-text">${highlight.text}</div>
+              </div>`
+            )
+            .join("")}
+        `;
       };
 
       var socket = io();
-      socket.on("comment", (comment) => {
-        presentComment(comment);
+      socket.on("highlights", (highlights) => {
+        presentHighlights(highlights);
       });
 
       (async () => {
-        const res = await fetch("/comment");
+        const res = await fetch("/highlights");
         const json = await res.json();
-        presentComment(json);
+        console.log(json);
+        presentHighlights(json);
       })();
     </script>
   </body>

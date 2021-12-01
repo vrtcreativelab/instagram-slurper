@@ -13,13 +13,13 @@ const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const isDev = require("electron-is-dev");
-let currentHighlight = null;
+let currentHighlights = [];
 
 let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 450,
+    width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
@@ -55,19 +55,19 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.handle("app:save-highlight", (event, highlight) => {
-  currentHighlight = highlight;
-  io.emit("comment", highlight);
+ipcMain.handle("app:set-highlights", (event, highlights) => {
+  currentHighlights = highlights;
+  io.emit("highlights", highlights);
 });
 
-ipcMain.handle("app:get-highlight", (event) => {
-  return currentHighlight;
+ipcMain.handle("app:get-highlights", (event) => {
+  return currentHighlights;
 });
 
 presenter.use(express.static(path.join(__dirname, "../presenter")));
 
-presenter.get("/comment", (req, res) => {
-  res.send(currentHighlight ? currentHighlight : {});
+presenter.get("/highlights", (req, res) => {
+  res.send(currentHighlights ? currentHighlights : []);
 });
 
 freeport(3001)

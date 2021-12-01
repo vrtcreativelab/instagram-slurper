@@ -10,6 +10,7 @@ import { getClient, removeSession } from "../../lib/igClient";
 
 import Feed from "../../components/Feed";
 import { addFeed, removeFeed } from "../../store/User/actions";
+import Highlights from "../../components/Highlights";
 
 
 
@@ -81,6 +82,7 @@ function Home({ profile, addFeed, removeFeed, feeds }) {
           </form>
         </div>
       <div className={styles.feeds}>
+        <Highlights />
         {feeds.map((feed) => (
           <Feed username={feed} key={`feed-${feed}`} />
         ))}

@@ -32,9 +32,7 @@ jobs:
         run: npm run build
         env:
           CI: false
-          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           REACT_APP_VERSION: $npm_package_version
-          REACT_APP_API_SERVICE_URL: ${{ secrets.API_SERVICE_URL }}
           REACT_APP_IMAGE_PROXY: ${{secrets.IG_PROXY_URL}}
       - name: Build Linux Variant (deb)
         run: npm run dist:linux
@@ -68,9 +66,7 @@ jobs:
       run: npm run build
       env:
         CI: false
-        REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         REACT_APP_VERSION: $npm_package_version
-        REACT_APP_API_SERVICE_URL: ${{ secrets.API_SERVICE_URL }}
         REACT_APP_IMAGE_PROXY: ${{secrets.IG_PROXY_URL}}
     - name: Build macOS variant
       run: npm run dist:mac
@@ -105,9 +101,7 @@ jobs:
         run: npm run build
         env:
           CI: false
-          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           REACT_APP_VERSION: $npm_package_version
-          REACT_APP_API_SERVICE_URL: ${{ secrets.API_SERVICE_URL }}
           REACT_APP_IMAGE_PROXY: ${{secrets.IG_PROXY_URL}}
       - name: Build Windows Variant
         run: npm run dist:win

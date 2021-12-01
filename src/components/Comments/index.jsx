@@ -2,20 +2,24 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { ipcRenderer } from "electron";
 import { getClient } from "../../lib/igClient";
-import "simplebar/dist/simplebar.min.css";
+import { fakeComment } from "../../lib/fakeData";
+import { addHighlight, removeHighlight } from "../../store/User/actions";
 
 import styles from "./styles.module.scss";
 
 function Comments({
   broadcastId,
+  addHighlight,
+  removeHighlight,
+  highlights,
 }) {
-  const [highlightedComment, setHighlightedComment] = useState();
   const [isFetchingComments, setFetchingComments] = useState(false);
   const [comments, setComments] = useState([]);
 
+
   useEffect(() => {
-    ipcRenderer.invoke("app:save-highlight", highlightedComment);
-  } , [highlightedComment]);
+    setComments([])
+  }, [broadcastId]);
 
   const client = getClient();
   let lastCommentTs =
@@ -38,33 +42,37 @@ function Comments({
 
   const fetchComments = async () => {
     setFetchingComments(true);
-    try {
-      const { comments } = await client.live.getComment({
-        broadcastId,
-        lastCommentTs,
-      });
-      console.log({
-        broadcastId,
-        lastCommentTs,
-      });
-      if (comments && comments.length > 0) {
-        const newLastCommentTs = comments[0].created_at;
-        lastCommentTs = newLastCommentTs;
-        setComments(old => [...comments, ...old]);
+    if(broadcastId === "FAKE") {
+      if(Math.round(Math.random()) === 1) {
+      setComments(old => [fakeComment(), ...old].slice(0,100));
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      try {
+        const { comments } = await client.live.getComment({
+          broadcastId,
+          lastCommentTs,
+        });
+
+        if (comments && comments.length > 0) {
+          const newLastCommentTs = comments[0].created_at;
+          lastCommentTs = newLastCommentTs;
+          setComments(old => [...comments, ...old].slice(0, 100));
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
+
     setFetchingComments(false);
   };
 
 
   const highlightComment = (comment) => {
-    if(!highlightedComment || comment.pk !== highlightedComment.pk) {
-      setHighlightedComment(comment);
+    if(highlights.find(h => h.pk === comment.pk)) {
+      removeHighlight(comment.pk);
     } else {
-      setHighlightedComment(null);
-    }
+      addHighlight(comment);
+    } 
 
   }
 
@@ -78,16 +86,14 @@ function Comments({
     };
   }, []);
 
-  const renderComments = (comments) => {
-    return comments.map((comment) => (
-      <div key={comment.pk} className={`${styles.comment} ${
-        highlightedComment
-          ? highlightedComment.pk === comment.pk
-            ? styles.active
-            : ""
-          : ""
-      }`} onClick={() => highlightComment(comment)}>
-        <img className={styles.profilePic} alt="Profile pic" src={`${process.env.REACT_APP_IMAGE_PROXY}/${comment.user.profile_pic_url}`} />
+  return (
+    <div className={`${styles.commentsScreen}`}>
+
+
+        <>
+          <div className={styles.comments}>{comments.map((comment) => (
+      <div key={comment.pk} className={`${styles.comment} ${highlights.find(h => h.pk === comment.pk) ? styles.active : ''}`} onClick={() => highlightComment(comment)}>
+        <img className={styles.profilePic} alt="Profile pic" src={comment.fake ? comment.user.profile_pic_url : `${process.env.REACT_APP_IMAGE_PROXY}/${comment.user.profile_pic_url}`} />
         <div className={styles.textContainer}>
           <h4 className={styles.title}>{comment.user.username}</h4>
           <p className={styles.text}>{comment.text}</p>
@@ -95,15 +101,7 @@ function Comments({
         
        
       </div>
-    ));
-  };
-
-  return (
-    <div className={`${styles.commentsScreen}`}>
-
-
-        <>
-          <div className={styles.comments}>{renderComments(comments)}</div>
+    ))}</div>
 
          
         </>
@@ -115,7 +113,15 @@ function Comments({
 const mapStateToProps = function (state) {
   return {
     profile: state.user.profile,
+    highlights: state.highlights
   };
 };
 
-export default connect(mapStateToProps)(Comments);
+const mapDispatchToProps = function (dispatch) {
+  return {
+    addHighlight: (comment) => dispatch(addHighlight(comment)),
+    removeHighlight: (pk) => dispatch(removeHighlight(pk))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Comments);

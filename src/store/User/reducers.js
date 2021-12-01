@@ -1,23 +1,13 @@
 import config from "../../utils/config";
 import { combineReducers } from "redux";
+
 import { types } from "./actions";
 
 function instagram(state = { client: null, comments: [] }, action) {
   switch (action.type) {
     case types.SET_IG_CLIENT:
       return { ...state, client: action.client };
-    case types.SAVE_COMMENTS:
-      return {
-        ...state,
-        comments: state.comments
-          ? [...action.comments, ...state.comments].slice(
-              0,
-              config.MAX_COMMENTS
-            )
-          : action.comments,
-      };
-    case types.CLEAR_COMMENTS:
-      return { ...state, comments: [] };
+
     default:
       return state;
   }
@@ -52,11 +42,26 @@ function feeds(state = [], action) {
   }
 }
 
+function highlights(state = [], action) {
+  console.log(action);
+  switch (action.type) {
+    case types.ADD_HIGHLIGHT:
+      return [action.highlight, ...state].slice(0, 3);
+    case types.REMOVE_HIGHLIGHT:
+      return state.filter((highlight) => highlight.pk !== action.pk);
+    case types.CLEAR_HIGHLIGHTS:
+      return [];
+    default:
+      return state;
+  }
+}
+
 const InstagramUser = combineReducers({
   instagram,
   user,
   auth,
   feeds,
+  highlights,
 });
 
 export default InstagramUser;
