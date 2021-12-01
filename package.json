@@ -1,7 +1,7 @@
 {
   "name": "instagram-slurper",
   "description": "Fetch instagram live comments - based on instagram-live-streamer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "copyright": "Copyright © 2021 Tim Broddin",
   "licence": "MIT",
@@ -91,7 +91,6 @@
     "react-scripts": "^3.4.3",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.4.1",
     "semver": "^7.3.2",
     "simplebar-react": "^2.2.0",
     "socket.io": "^4.3.2",
@@ -132,7 +131,6 @@
   "devDependencies": {
     "@rescripts/cli": "^0.0.14",
     "@rescripts/rescript-env": "^0.0.12",
-    "@sentry/cli": "^1.53.0",
     "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "electron": "^9.0.0",
