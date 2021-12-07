@@ -45,6 +45,17 @@ function Login({ dispatch }) {
 
   window.ipcRenderer = ipcRenderer;
 
+
+  const challengeIndex = async (ig, url, params) => {
+    return ig.request.send({
+        url: `https://i.instagram.com${url}`,
+        method: 'POST',
+        form: {
+            ...params,
+        }}
+    );
+}
+
   const completeSignIn = async () => {
     saveSession();
     try {
@@ -57,9 +68,26 @@ function Login({ dispatch }) {
       setLoading(false);
       history.push("/home");
     } catch (error) {
+
+      if (error instanceof IgCheckpointError) {
+
+        try {
+          await client.challenge.auto(false); // requessting sms-code or click "it was me"
+
+        } catch(e) {
+          console.log(e);
+        }
+        setCurrentForm(forms.checkpoint);
+      } else {
+        removeSession();
+      }
+
       console.error({ error });
-      removeSession();
+
       setLoading(false);
+
+
+      
     }
   };
 
@@ -85,6 +113,7 @@ function Login({ dispatch }) {
   }, []);
 
   const signIn = async ({ username, password }) => {
+    console.log('Signing in');  
     setLoading(true);
     setCredError(false);
     try {
@@ -108,7 +137,7 @@ function Login({ dispatch }) {
         setIsToTpOn(totp_two_factor_on);
         setTwoFactorId(two_factor_identifier);
         setCurrentForm(forms.twoFactor);
-      } else if (error instanceof IgCheckpointError) {
+      } else if (error instanceof IgCheckpointError || true) {
         console.error("Checkpoint error");
         console.log({ checkpoint: client.state.checkpoint });
         await client.challenge.auto(true); // requessting sms-code or click "it was me"

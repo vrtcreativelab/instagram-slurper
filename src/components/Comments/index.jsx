@@ -30,7 +30,7 @@ function Comments({
       if (!isFetchingComments) {
         fetchComments();
       }
-    }, 2000);
+    }, 5000);
   };
 
   const stopComments = async () => {

@@ -1,7 +1,7 @@
 {
   "name": "instagram-slurper",
   "description": "Fetch instagram live comments - based on instagram-live-streamer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "copyright": "Copyright © 2021 Tim Broddin",
   "licence": "MIT",
@@ -111,8 +111,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist:mac": "electron-builder --mac",
-    "dist:win": "electron-builder --win --x64 --ia32",
-    "dist:linux": "electron-builder --linux"
+    "dist:win": "electron-builder --win nsis:x64 nsis:ia32",
+    "dist:linux": "electron-builder --linux appimage"
   },
   "eslintConfig": {
     "extends": "react-app"

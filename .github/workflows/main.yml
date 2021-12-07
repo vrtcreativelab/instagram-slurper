@@ -35,7 +35,7 @@ jobs:
           REACT_APP_VERSION: $npm_package_version
           REACT_APP_IMAGE_PROXY: ${{secrets.IG_PROXY_URL}}
       - name: Build Linux Variant (deb)
-        run: npm run dist:linux
+        run: npm run dist:linux -- --publish always
         env:
           CI: false
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -69,7 +69,7 @@ jobs:
         REACT_APP_VERSION: $npm_package_version
         REACT_APP_IMAGE_PROXY: ${{secrets.IG_PROXY_URL}}
     - name: Build macOS variant
-      run: npm run dist:mac
+      run: npm run dist:mac -- --publish always
       env:
         CI: false
         CSC_IDENTITY_AUTO_DISCOVERY: false
@@ -104,7 +104,7 @@ jobs:
           REACT_APP_VERSION: $npm_package_version
           REACT_APP_IMAGE_PROXY: ${{secrets.IG_PROXY_URL}}
       - name: Build Windows Variant
-        run: npm run dist:win
+        run: npm run dist:win -- --publish always
         env:
           CI: false
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
